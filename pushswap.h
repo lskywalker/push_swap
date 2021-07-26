@@ -13,7 +13,7 @@
 #ifndef PUSHSWAP_H
 # define PUSHSWAP_H
 
-#include "libft/libft.h"
+#include <libft.h>
 
 typedef struct	swap {
 	int 			data;

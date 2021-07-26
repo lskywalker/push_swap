@@ -10,62 +10,8 @@
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "../pushswap.h"
+#include <pushswap.h>
 #include <stdio.h>
-
-int		ft_atoi(const char *str)
-{
-	int			i;
-	long long	res;
-	long long	n;
-
-	i = 0;
-	n = 1;
-	res = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
-	if (str[i] == '-')
-		n = -1;
-	if (str[i] == '+' || str[i] == '-')
-		i++;
-	while (str[i] >= '0' && str[i] <= '9')
-	{
-		if ((res * 10 + (str[i] - '0')) < res)
-			return (((-1 * n) - 1) / 2);
-		res = res * 10 + str[i] - '0';
-		i++;
-	}
-	return ((int)res * n);
-}
-
-int		ft_isdigit(int c)
-{
-	if (c >= 48 && c <= 57)
-		return (1);
-	else
-		return (0);
-}
-
-void	ft_putchar_fd(char c, int fd)
-{
-	write(fd, &c, 1);
-}
-
-void	ft_putstr_fd(char *s, int fd)
-{
-	int i;
-
-	i = 0;
-	if (!s)
-		return ;
-	while (s[i])
-	{
-		write(fd, &s[i], 1);
-		i++;
-	}
-}
-
-///////////////////////////////////////////////////////////////////////
 
 swap	*ft_newlist(int data)
 {
