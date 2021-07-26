@@ -10,25 +10,30 @@
 #                                                                              #
 # **************************************************************************** #
 
-NAME = push_swap
+NAME		= push_swap
 
-SRC_FILES = main.c
+SRC_FILES	= main.c
 
-SRC = $(addprefix src/, $(SRC_FILES))
+SRC			= $(addprefix src/, $(SRC_FILES))
 
-OBJS := ${SRC:.c=.o}
+OBJS		= ${SRC:.c=.o}
 
-LIBRARY = ./libft.a
+LIBRARY 	= ./libft.a
 
-FLAG = -Wall -Wextra -Werror
+FLAG		= -Wall -Wextra -Werror $(INC)
+
+INC			= -I libft -I . 
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
-	gcc $(OBJS) libft/libft.a -o $(NAME)
+	@echo "compiling $(NAME)"
+	make -C libft
+	gcc $(FLAG) $(OBJS) libft/libft.a -o $(NAME)
 
 %.o: %.c
-	gcc $(FLAG) -I libft/libft.h -I pushswap.h $< -o $@
+	@echo "compiling .o"
+	gcc $(FLAG) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
@@ -40,10 +45,5 @@ fclean:
 	rm -f $(OBJS)
 
 re: fclean all
-
-LIBFT: FORCE
-	@echo "Compiling libft"
-	make -C libft
-	mv libft/$(LIBRARY) .
 
 FORCE:
