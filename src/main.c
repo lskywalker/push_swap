@@ -6,7 +6,7 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/30 15:44:32 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/07/26 20:31:45 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/07/28 17:44:57 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,9 +30,9 @@ void	ft_displaylist(swap *head)
 	swap *p;
 
 	p = head;
-	while(p)
+	while(p != NULL)
 	{
-		printf("%d\n", p->data);
+		printf("[%d]\n", p->data);
 		p = p->next;
 	}
 }
@@ -62,17 +62,35 @@ void	ft_adddata(swap **p, swap *new)
 		ft_add_front(p, new);
 }
 
-void	ft_checkinput(char **input)
+swap	*ft_sort(swap *head)
+{
+	int i;
+	swap	*tmp;
+
+	i = 0;
+	while (head->next != NULL)
+	{
+		tmp = head->next;
+		if (head->data > tmp->data)
+			ft_switch(head, tmp);
+		else
+			head = head->next;
+	}
+}
+
+swap	*ft_checkinput(char **input)
 {
 	int		i;
 	int		j;
 	swap	*list;
 	swap	*tmp;
+	swap	*p;
 	int		data;
 
-	i = 0;
+	i = 1;
 	list = NULL;
 	tmp = NULL;
+	p = NULL;
 	while (input[i])
 	{
 		j = 0;
@@ -81,25 +99,38 @@ void	ft_checkinput(char **input)
 			if (!ft_isdigit(input[i][j]))
 			{
 				ft_putstr_fd("Error\n", 0);
-				return ;
+				return (0);
 			}
 			j++;
 		}
 		data = ft_atoi(input[i]);
 		tmp = ft_newlist(data);
-		ft_adddata(&list, tmp);
-		free(tmp);
+		if (list == NULL)
+			list = tmp;
+		else
+		{
+			p = list;
+			while (p->next != NULL)
+				p = p->next;
+			p->next = tmp;
+		}
 		i++;
 	}
+	ft_displaylist(list);
+	return (list);
 }
 
 int		main(int amount, char **input)
 {
+	swap *head;
+
+	head = NULL;
 	if (amount < 2)
 	{
 		ft_putchar_fd('\n', 0);
 		return (0);
 	}
-	ft_checkinput(input);
+	head = ft_checkinput(input);
+	head = ft_sort(head);
 	return (0);
 }
