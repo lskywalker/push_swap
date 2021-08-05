@@ -6,7 +6,7 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/30 15:44:32 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/08/03 16:08:39 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/08/05 18:38:45 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,12 +30,7 @@ void	ft_pushstack(stack **list, int data)
 {
 	stack	*new;
 
-	new = malloc(sizeof(stack));
-	if (!new)
-		return ;
-	new->data = data;
-	new->prev = NULL;
-	new->next = NULL;
+	new = ft_newlist(data);
 	if (*list != NULL)
 		new->prev = *list;
 	*list = new;
@@ -61,20 +56,38 @@ void	ft_add_front(stack **alst, stack *new)
 	*alst = new;
 }
 
+void	ft_add_back(stack **head, stack *new)
+{
+	stack	**temp;
+
+	if (!head)
+		return ;
+	temp = head;
+	if (*temp)
+	{
+		while ((*temp)->prev != NULL)
+			*temp = (*temp)->prev;
+		(*temp)->prev = new;
+	}
+	else
+		new->prev = *head;
+		*head = new;
+}
+
 stack	*ft_rotateup(stack *head)
 {
 	stack	*tmp;
-	stack	*bottom;
 
-	bottom = head;
+	ft_displaylist(head);
 	tmp = head;
-	while (bottom->next != NULL)
-		bottom = bottom->next;
 	head = head->prev;
-	head->next = NULL;
-	tmp->prev = bottom;
-	tmp->next = NULL;
-	bottom->next = tmp;
+	tmp->prev = NULL;
+	// printf("old head = %d\nnew head = %d\n", tmp->data, head->data);
+	printf("\n");
+	ft_displaylist(head);
+	ft_add_back(&head, tmp);
+	printf("\n");
+	ft_displaylist(tmp);
 	return (head);
 }
 
@@ -241,14 +254,14 @@ void	ft_sortstack(stack *head_a, stack *head_b)
 	b = head_b;
 	smallest = ft_findsmallest(a);
 	i = 0;
-	while (a->prev != NULL)
+	while (a != NULL)
 	{
 		if (a->data == smallest)
 		{
 			// if (i > (ft_listsize(a) / 2))
 			// 	throughbottom(a, b);
 			// else
-				a = ft_rotateup(a);
+				a = ft_rotateup(head_a);
 			break ;
 		}
 		a = a->prev;
@@ -273,9 +286,9 @@ int		main(int amount, char **input)
 
 	// head = ft_checkinput(input);
 	// head = ft_sort(head);
+	// ft_displaylist(stack.a);
 	ft_sortstack(stack.a, stack.b);
-	ft_displaylist(stack.a);
-	printf("\n");
-	// ft_displaylist(stack.b);
+	// printf("\n");
+	// ft_displaylist(stack.a);
 	return (0);
 }
