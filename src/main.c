@@ -6,7 +6,7 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/30 15:44:32 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/08/09 21:05:14 by lukesmit      ########   odam.nl         */
+/*   Updated: 2021/08/18 18:08:55 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -56,19 +56,6 @@ void	ft_add_front(stack **head, stack *new)
 	*head = new;
 }
 
-void	ft_transferstack(stack **head, stack *new)
-{
-	stack *tmp;
-
-	tmp = new;
-	if (*head != NULL)
-	{
-		tmp->prev = *head;
-	}
-	*head = new;
-	(*head)->next = NULL;
-}
-
 void	ft_add_back(stack **head, stack *new)
 {
 	stack	*temp;
@@ -97,28 +84,6 @@ stack	*ft_rotateup(stack **head)
 	ft_add_back(head, tmp);
 	return (*head);
 }
-
-// stack	*ft_sort(stack *head)
-// {
-// 	stack	*tmp;
-// 	stack	*list;
-
-// 	while (1)
-// 	{
-// 		list = head;
-// 		tmp = NULL;
-// 		while (list->next != NULL)
-// 		{
-// 			tmp = list->next;
-// 			if (list->data > tmp->data)
-// 				list = ft_switch(list);
-// 			list = list->next;
-// 		}
-// 		if (ft_sorted(list) == 1)
-// 			break ;
-// 	}
-// 	return (head);
-// }
 
 stack	*ft_checkinput(char **input)
 {
@@ -222,34 +187,6 @@ int		ft_listsize(stack *lst)
 	return (i);
 }
 
-// void	throughbottom(stack *a, stack *b)
-// {
-// 	while (a->prev != NULL)
-// 		a = a->prev;
-// 	Switch bottom with top
-// 	a->data = head;?
-// }
-
-// void	throughtop(stack **a, stack **b)
-// {
-// 	stack *tmp;
-
-// 	while ((*a)->next != NULL)
-// 	{
-// 		(*a) = ft_switch(*a);
-// 		(*a) = (*a)->next;
-// 	}
-// 	if ((*b) == NULL)
-// 		tmp = ft_newlist((*a)->data);
-// 	else
-// 	{
-// 		tmp = (*b);
-// 		ft_pushstack(&tmp, (*a)->data);
-// 		(*b) = tmp;
-// 	}
-// 	(*a) = NULL;
-// }
-
 void	ft_sortstack(stack **head_a, stack **head_b)
 {
 	int		smallest;
@@ -259,31 +196,22 @@ void	ft_sortstack(stack **head_a, stack **head_b)
 
 	a = *head_a;
 	b = *head_b;
-	smallest = ft_findsmallest(a);
 	i = 0;
-	while (a != NULL)
+	smallest = ft_findsmallest(a);
+	while (a->prev != NULL)
 	{
 		if (a->data == smallest)
 		{
-			if (i == 0)
+			if ((*head_a)->data == smallest)
 			{
-				ft_transferstack(head_b, a);
-				// ft_displaylist(b);
+				*head_a = (*head_a)->prev;
+				ft_add_back(head_b, a);
 			}
-			else
-				a = ft_rotateup(head_a);
-				while(a->next != NULL)
-				{
-					printf("kaas");
-					a = a->next;
-				}
-			*head_a = (*head_a)->prev;
+			a = ft_rotateup(head_a);
 		}
-		a = a->prev;
-		i++;
+		else
+			a = a->prev;
 	}
-	while (a->next != NULL)
-		a = a->next;
 }
 
 int		main(int amount, char **input)
@@ -301,9 +229,9 @@ int		main(int amount, char **input)
 	// head = ft_checkinput(input);
 	// head = ft_sort(head);
 	ft_sortstack(&stack.a, &stack.b);
-	// printf("\nA: ");
-	// ft_displaylist(stack.a);
-	printf("\nB: ");
+	printf("A: ");
+	ft_displaylist(stack.a);
+	printf("\nB:");
 	ft_displaylist(stack.b);
 	return (0);
 }
