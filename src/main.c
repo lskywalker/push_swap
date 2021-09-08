@@ -6,7 +6,7 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/30 15:44:32 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/08/18 18:08:55 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/09/08 17:42:23 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -85,48 +85,6 @@ stack	*ft_rotateup(stack **head)
 	return (*head);
 }
 
-stack	*ft_checkinput(char **input)
-{
-	int		i;
-	int		j;
-	stack	*list;
-	stack	*tmp;
-	stack	*p;
-	int		data;
-
-	i = 1;
-	list = NULL;
-	tmp = NULL;
-	p = NULL;
-	while (input[i])
-	{
-		j = 0;
-		while (input[i][j])
-		{
-			if (!ft_isdigit(input[i][j]))
-			{
-				ft_putstr_fd("Error\n", 0);
-				return (0);
-			}
-			j++;
-		}
-		data = ft_atoi(input[i]);
-		tmp = ft_newlist(data);
-		if (list == NULL)
-			list = tmp;
-		else
-		{
-			p = list;
-			while (p->next != NULL)
-				p = p->next;
-			p->next = tmp;
-		}
-		i++;
-	}
-	ft_displaylist(list);
-	return (list);
-}
-
 stack	*init_stack(char **input, int amount)
 {
 	stack	*list;
@@ -179,56 +137,68 @@ int		ft_listsize(stack *lst)
 	i = 1;
 	if (lst == NULL)
 		return (0);
-	while (lst->next != NULL)
+	while (lst->prev != NULL)
 	{
-		lst = lst->next;
+		lst = lst->prev;
 		i++;
 	}
 	return (i);
+}
+
+void	ft_pushb(stack **b, int node)
+{
+	stack	*tmp;
+
+	tmp = (*b)->prev;
+	b->data = node;
+	b->prev = tmp;
+	// fix die pushb en pusha shit
 }
 
 void	ft_sortstack(stack **head_a, stack **head_b)
 {
 	int		smallest;
 	int		i;
-	stack	*a;
-	stack	*b;
 
-	a = *head_a;
-	b = *head_b;
 	i = 0;
-	smallest = ft_findsmallest(a);
-	while (a->prev != NULL)
+	printf("\nA:");
+	ft_displaylist(a);
+	printf("\nB:");
+	ft_displaylist(b);
+	printf("\n");
+	smallest = ft_findsmallest(*head_a);
+	printf("-{%d}-\n", smallest);
+	while (*head_a != NULL)
 	{
-		if (a->data == smallest)
+		if ((*head_a)->data == smallest)
 		{
-			if ((*head_a)->data == smallest)
-			{
-				*head_a = (*head_a)->prev;
-				ft_add_back(head_b, a);
-			}
-			a = ft_rotateup(head_a);
+			// push head_a to b
+			ft_add_back(head_b, *head_a);
+			break ;
 		}
 		else
-			a = a->prev;
+			*head_a = ft_rotateup(head_a);
 	}
 }
 
 int		main(int amount, char **input)
 {
 	data	stack;
+	int		i;
 
 	if (amount < 2)
 	{
 		ft_putchar_fd('\n', 0);
 		return (0);
 	}
+	i = 0;
 	stack.a = init_stack(input, amount);
 	stack.b = NULL;
-
-	// head = ft_checkinput(input);
-	// head = ft_sort(head);
-	ft_sortstack(&stack.a, &stack.b);
+	while (i < ft_listsize(stack.a))
+	{	
+		ft_sortstack(&stack.a, &stack.b);
+		i++;
+	}
 	printf("A: ");
 	ft_displaylist(stack.a);
 	printf("\nB:");
