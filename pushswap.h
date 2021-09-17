@@ -6,7 +6,7 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/30 16:00:09 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/08/03 12:56:37 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/09/17 15:27:18 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,5 +26,18 @@ typedef struct data {
 	stack	*b;
 }data;
 
+void	sa(stack **a);
+void	sb(stack **b);
+void	ss(stack **a, stack **b);
+void	ra(stack **a);
+void	rb(stack **b);
+void	rr(stack **a, stack **b);
+void	rra(stack **a);
+void	rrb(stack **b);
+void	rrr();
+void	pa();
+void	pb();
+
+void	ft_add_back(stack **head, stack *new);
 
 #endif

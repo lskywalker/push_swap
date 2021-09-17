@@ -6,13 +6,13 @@
 #    By: lsmit <lsmit@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/06/30 16:18:16 by lsmit         #+#    #+#                  #
-#    Updated: 2021/07/26 20:33:59 by lsmit         ########   odam.nl          #
+#    Updated: 2021/09/17 14:10:45 by lsmit         ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= push_swap
 
-SRC_FILES	= main.c
+SRC_FILES	= main.c instructions.c
 
 SRC			= $(addprefix src/, $(SRC_FILES))
 
