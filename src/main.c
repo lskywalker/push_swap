@@ -6,82 +6,15 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/06/30 15:44:32 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/09/17 19:09:01 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/10/22 17:01:55 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include <pushswap.h>
-#include <stdio.h>
+#include "../pushswap.h"
 
-stack	*ft_newlist(int data)
+t_stack	*ft_rotateup(t_stack **head)
 {
-	stack	*head;
-
-	head = malloc(sizeof(stack));
-	if (!head)
-		return (NULL);
-	head->data = data;
-	head->prev = NULL;
-	head->next = NULL;
-	return (head);
-}
-
-void	ft_pushstack(stack **list, int data)
-{
-	stack	*new;
-
-	new = ft_newlist(data);
-	if (*list != NULL)
-	{
-		new->prev = *list;
-		(*list)->next = new;
-	}
-	*list = new;
-	
-}
-
-void	ft_displaylist(stack *head)
-{
-	stack *p;
-
-	p = head;
-	while(p != NULL)
-	{
-		printf("[%d]\n", p->data);
-		p = p->prev;
-	}
-}
-
-void	ft_add_front(stack **head, stack *new)
-{
-	if (!head)
-		return ;
-	new->prev = *head;
-	*head = new;
-	(*head)->next = NULL;
-}
-
-void	ft_add_back(stack **head, stack *new)
-{
-	stack	*temp;
-
-	if (!head)
-		return ;
-	temp = *head;
-	if (temp)
-	{
-		while (temp->prev != NULL)
-			temp = temp->prev;
-		temp->prev = new;
-		new->next = temp;
-	}
-	else
-		ft_add_front(head, new);
-}
-
-stack	*ft_rotateup(stack **head)
-{
-	stack	*tmp;
+	t_stack	*tmp;
 
 	tmp = *head;
 	(*head) = (*head)->prev;
@@ -90,9 +23,9 @@ stack	*ft_rotateup(stack **head)
 	return (*head);
 }
 
-stack	*init_stack(char **input, int amount)
+t_stack	*init_stack(char **input, int amount)
 {
-	stack	*list;
+	t_stack	*list;
 	char	**stack;
 	int		i;
 
@@ -115,239 +48,118 @@ stack	*init_stack(char **input, int amount)
 	return (list);
 }
 
-int		ft_findsmallest(stack *a)
-{
-	int		smallest;
-	stack	*tmp;
-
-	tmp = a;
-	smallest = a->data;
-	while (a != NULL)
-	{
-		if (a->prev != NULL)
-		{
-			tmp = a->prev;
-			if (tmp->data < smallest)
-				smallest = tmp->data;
-		}
-		a = a->prev;
-	}
-	return (smallest);
-}
-
-int		ft_findbiggest(stack *a)
-{
-	int		biggest;
-	stack	*tmp;
-
-	tmp = a;
-	biggest = a->data;
-	while (a != NULL)
-	{
-		if (a->prev != NULL)
-		{
-			tmp = a->prev;
-			if (tmp->data > biggest)
-				biggest = tmp->data;
-		}
-		a = a->prev;
-	}
-	return (biggest);
-}
-
-int		ft_listsize(stack *lst)
+t_stack	*totop(t_stack *a, int nb, int bs, int amount)
 {
 	int		i;
 
-	i = 1;
-	if (lst == NULL)
-		return (0);
-	while (lst->prev != NULL)
-	{
-		lst = lst->prev;
-		i++;
-	}
-	return (i);
-}
-
-// void	ft_pushb(stack **b, int node)
-// {
-// 	stack	*tmp;
-
-// 	tmp = (*b)->prev;
-// 	b->data = node;
-// 	b->prev = tmp;
-// 	// fix die pushb en pusha shit
-// }
-
-// void	ft_sortstack(stack **head_a, stack **head_b)
-// {
-// 	int		smallest;
-// 	int		i;
-
-// 	i = 0;
-	// printf("\nA:");
-	// ft_displaylist(a);
-	// printf("\nB:");
-	// ft_displaylist(b);
-	// printf("\n");
-	// smallest = ft_findsmallest(*head_a);
-	// printf("-{%d}-\n", smallest);
-	// while (*head_a != NULL)
-	// {
-	// 	if ((*head_a)->data == smallest)
-	// 	{
-	// 		// push head_a to b
-	// 		ft_add_back(head_b, *head_a);
-	// 		break ;
-	// 	}
-	// 	else
-	// 		*head_a = ft_rotateup(head_a);
-	// }
-// }
-
-void	one_not_top(stack **a, int smallest)
-{
-	int		tmp;
-	stack	*head;
-
-	head = *a;
-	tmp = (*a)->data;
-	*a = (*a)->prev;
-	if ((*a)->prev == NULL)
-		sa(&head);
-	else if ((*a)->data == smallest)
-	{
-		*a = (*a)->prev;
-		if ((*a)->data > tmp)
-			sa(&head);
-		else
-			ra(&head);
-	}
-	else
-	{
-		if ((*a)->data > tmp)
-			rra(&head);
-		else
-		{
-			sa(&head);
-			rra(&head);
-		}
-	}
-}
-
-void	smallstack(stack **a)
-{
-	int		smallest;
-	int		tmp;
-	stack	*head;
-
-	head = *a;
-	smallest = ft_findsmallest(*a);
-	if ((*a)->data == smallest)
-	{
-		*a = (*a)->prev;
-		tmp = (*a)->data;
-		if ((*a)->prev != NULL)
-		{
-			*a = (*a)->prev;
-			if (tmp > (*a)->data)
-			{
-				sa(&head);
-				ra(&head);
-			}
-			else
-				ft_putchar_fd('\n', 0);
-		}
-		else
-			ft_putchar_fd('\n', 0);
-	}
-	else
-		one_not_top(a, smallest);
-}
-
-void	totop(stack **a, int nb)
-{
-	stack	*head;
-	int		i;
-
-	i = 0;
-	head = *a;
-	while ((*a)->prev != NULL)
-	{	
-		*a = (*a)->prev;
-		i++;
-		if ((*a)->data == nb)
-			break ;
-	}
+	i = findnb(a, nb, 0);
 	if (i == 1)
-		sa(&head);
+		rarb(&a, 1);
 	if (i == 2)
 	{
-		ra(&head);
-		sa(&head);
+		rarb(&a, 1);
+		sasb(&a, 1);
 	}
 	if (i > 2)
 	{
-		rra(&head);
-		if (i == 4)
-			rra(&head);
+		rrarrb(&a, 1);
+		if (i == 3 && bs != 1 && amount != 5)
+			rrarrb(&a, 1);
 	}
+	return (a);
 }
 
-void	midsizestack(stack **a, stack **b, int amount)
+void	biggerstack(t_stack **a, t_stack **b, double amount)
 {
-	// gaat nog iets fout met de head denk ik
-	if ((*a)->data != ft_findsmallest(*a))
-		totop(a, ft_findsmallest(*a));
-	pb(a, b);
-	if (amount == 6 && (*a)->data != ft_findbiggest(*a))
-		totop(a, ft_findbiggest(*a));
-	if (amount == 6)
-		pb(a, b);
-	smallstack(a);
-	pa(a, b);
-	if (amount == 6)
+	t_stack	*head;
+	t_stack	*head_b;
+	t_info	i;
+
+	i.oldamount = amount;
+	i.prev = ft_findsmallest(*a);
+	if (amount > 101)
+		i.chunck = (ft_findbiggest(*a) - i.prev) / 11;
+	else
+		i.chunck = (ft_findbiggest(*a) - i.prev) / 5;
+	head = *a;
+	i.nb = i.prev + i.chunck;
+	while (amount > 0)
 	{
-		ra(a);
-		pa(a, b);
+		*a = head;
+		i.i = stepsfromtop(*a, i.prev, i.nb);
+		i.j = stepsfrombottom(*a, i.prev, i.nb);
+		rotate(&head, &i);
+		if (i.on == 0)
+		{	
+			push(&head, b, 2);
+			amount--;
+		}
 	}
+	head_b = *b;
+	amount = i.oldamount;
+	while (amount > 0)
+	{
+		
+		*b = head_b;
+		i.i = 0;
+		i.biggest = ft_findbiggest(*b);
+		while ((*b)->prev != NULL)
+		{
+			// dprintf(2, "KAAAAAAAAS\n");
+			if ((*b)->data == i.biggest)
+				break ;
+			*b = (*b)->prev;
+			i.i++;
+		}
+		// if ((*b)->prev == NULL)
+		// 	i.i++;
+		if (i.i < (amount / 2))
+		{
+			while (i.i > 0)
+			{
+				rarb(&head_b, 2);
+				i.i--;
+			}
+		}
+		else
+		{
+			while (i.i < amount)
+			{
+				rrarrb(&head_b, 2);
+				i.i++;
+			}
+		}
+		// dprintf(2, "[%f]\n", amount);
+			// head_b = pushback2(head_b, amount, i);
+		push(&head_b, a, 1);
+		amount--;
+	}
+	// pushback(a, b, b, i.oldamount);
 }
 
-int		main(int amount, char **input)
+int	main(int amount, char **input)
 {
-	data	stack;
+	t_data	stack;
 	int		i;
 
 	if (amount < 3)
 	{
-		ft_putchar_fd('\n', 0);
+		write(1, "\n", 1);
 		return (0);
 	}
 	i = 0;
 	stack.a = init_stack(input, amount);
 	stack.b = NULL;
+	if (precheck(stack.a) == 1)
+		return (0);
 	if (amount < 7)
 	{
 		if (amount < 5)
-			smallstack(&stack.a);
+			smallstack(&stack.a, ft_findsmallest(stack.a));
 		else
 			midsizestack(&stack.a, &stack.b, amount);
-			return (0);
 	}
 	else
-	{
-		printf("wacht ff\n");
-		return (0);
-	}
-	// while (i < ft_listsize(stack.a))
-	// {	
-	// 	ft_sortstack(&stack.a, &stack.b);
-	// 	i++;
-	// }
-	// printf("A: ");
-	// ft_displaylist(stack.a);
-	// printf("\nB:");
-	// ft_displaylist(stack.b);
+		biggerstack(&stack.a, &stack.b, (double)amount - 1);
 	return (0);
 }

@@ -6,165 +6,96 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/09/17 14:10:22 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/09/17 18:11:08 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/10/12 18:19:07 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pushswap.h"
 #include <stdio.h>
 
-void	sa(stack **a)
+void	sasb(t_stack **s, int type)
 {
-	int tmp;
+	int	tmp;
 	int	tmp2;
 
-	tmp = (*a)->data;
-	*a = (*a)->prev;
-	tmp2 = (*a)->data;
-	(*a)->data = tmp;
-	*a = (*a)->next;
-	(*a)->data = tmp2;
-	ft_putstr_fd("sa\n", 0);
+	tmp = (*s)->data;
+	*s = (*s)->prev;
+	tmp2 = (*s)->data;
+	(*s)->data = tmp;
+	*s = (*s)->next;
+	(*s)->data = tmp2;
+	if (type == 1)
+		ft_putstr_fd("sa\n", 1);
+	if (type == 2)
+		ft_putstr_fd("sb\n", 1);
 }
 
-void	sb(stack **b)
+void	rarb(t_stack **s, int type)
 {
-	int tmp;
-	int	tmp2;
+	t_stack	*tmp;
 
-	tmp = (*b)->data;
-	*b = (*b)->prev;
-	tmp2 = (*b)->data;
-	(*b)->data = tmp;
-	*b = (*b)->next;
-	(*b)->data = tmp2;
-	ft_putstr_fd("sb\n", 0);
-}
-
-void	ss(stack **a, stack **b)
-{
-	sa(a);
-	sb(b);
-	ft_putstr_fd("ss\n", 0);
-}
-
-void	ra(stack **a)
-{
-	stack	*tmp;
-
-	tmp = *a;
-	*a = (*a)->prev;
+	tmp = *s;
+	*s = (*s)->prev;
 	tmp->prev = NULL;
-	(*a)->next = NULL;
-	ft_add_back(a, tmp);
-	ft_putstr_fd("ra\n", 0);
+	(*s)->next = NULL;
+	ft_add_back(s, tmp);
+	if (type == 1)
+		ft_putstr_fd("ra\n", 1);
+	if (type == 2)
+		ft_putstr_fd("rb\n", 1);
 }
 
-void	rb(stack **b)
+void	rrarrb(t_stack **s, int type)
 {
-	stack	*tmp;
+	t_stack	*tmp;
 
-	tmp = *b;
-	*b = (*b)->prev;
-	tmp->prev = NULL;
-	(*b)->next = NULL;
-	ft_add_back(b, tmp);
-	ft_putstr_fd("rb\n", 0);
-}
-
-void	rr(stack **a, stack **b)
-{
-	ra(a);
-	rb(b);
-	ft_putstr_fd("rr\n", 0);
-}
-
-void	rra(stack **a)
-{
-	stack	*tmp;
-
-	tmp = *a;
-	while(tmp->prev != NULL)
+	tmp = *s;
+	while (tmp->prev != NULL)
 		tmp = tmp->prev;
-	tmp->prev = *a;
-	*a = tmp;
+	tmp->prev = *s;
+	(*s)->next = tmp;
 	tmp->next->prev = NULL;
-	(*a)->next = NULL;
-	ft_putstr_fd("rra\n", 0);
+	tmp->next = NULL;
+	*s = tmp;
+	if (type == 1)
+		ft_putstr_fd("rra\n", 1);
+	if (type == 2)
+		ft_putstr_fd("rrb\n", 1);
 }
 
-void	rrb(stack **b)
+void	push2(t_stack **src, t_stack **dst, t_stack **tmp)
 {
-	stack	*tmp;
-
-	tmp = *b;
-	while(tmp->prev != NULL)
-		tmp = tmp->prev;
-	tmp->prev = *b;
-	*b = tmp;
-	tmp->next->prev = NULL;
-	(*b)->next = NULL;
-	ft_putstr_fd("rrb\n", 0);
-}
-
-void	pb(stack **a, stack **b)
-{
-	stack *tmp;
-
-	if ((*a)->prev != NULL)
+	*tmp = *src;
+	*src = (*src)->prev;
+	(*src)->next = NULL;
+	if (*dst == NULL)
 	{
-		tmp = *a;
-		*a = (*a)->prev;
-		(*a)->next = NULL;
-		if (*b == NULL)
-		{
-			*b = tmp;
-			(*b)->prev = NULL;
-		}
-		else
-		{
-			(*a)->next = NULL;
-			tmp->prev = *b;
-			*b = tmp;
-		}
+		*dst = *tmp;
+		(*dst)->prev = NULL;
 	}
 	else
 	{
-		tmp = *a;
-		*a = NULL;
-		tmp->prev = *b;
-		*b = tmp;
+		(*dst)->next = *tmp;
+		(*tmp)->prev = *dst;
+		*dst = *tmp;
 	}
-	ft_putstr_fd("pb\n", 0);
 }
 
-void	pa(stack **a, stack **b)
+void	push(t_stack **src, t_stack **dst, int type)
 {
-	stack *tmp;
+	t_stack	*tmp;
 
-	if ((*b)->prev != NULL)
-	{
-		tmp = *b;
-		*b = (*b)->prev;
-		(*b)->next = NULL;
-		if (*a == NULL)
-		{
-			*a = tmp;
-			(*a)->prev = NULL;
-		}
-		else
-		{
-			(*b)->next = NULL;
-			tmp->prev = *a;
-			*a = tmp;
-		}
-	}
+	if ((*src)->prev != NULL)
+		push2(src, dst, &tmp);
 	else
 	{
-		tmp = *b;
-		*b = NULL;
-		tmp->prev = *a;
-		*a = tmp;
+		tmp = *src;
+		*src = NULL;
+		tmp->prev = *dst;
+		*dst = tmp;
 	}
-	ft_putstr_fd("pa\n", 0);
+	if (type == 1)
+		ft_putstr_fd("pa\n", 1);
+	if (type == 2)
+		ft_putstr_fd("pb\n", 1);
 }

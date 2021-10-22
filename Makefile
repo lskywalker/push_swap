@@ -6,44 +6,43 @@
 #    By: lsmit <lsmit@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/06/30 16:18:16 by lsmit         #+#    #+#                  #
-#    Updated: 2021/09/17 14:10:45 by lsmit         ########   odam.nl          #
+#    Updated: 2021/10/22 16:46:36 by lsmit         ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= push_swap
 
-SRC_FILES	= main.c instructions.c
+SRC_FILES	= main.c instructions.c bigstackutils.c utils.c utils2.c calculate.c small_midsize.c ft_split.c
 
 SRC			= $(addprefix src/, $(SRC_FILES))
 
 OBJS		= ${SRC:.c=.o}
 
-LIBRARY 	= ./libft.a
 
-FLAG		= -Wall -Wextra -Werror $(INC)
-
-INC			= -I libft -I . 
+FLAG		= -Wall -Wextra -Werror
 
 all: $(NAME)
 
 $(NAME): $(OBJS)
 	@echo "compiling $(NAME)"
-	make -C libft
-	gcc $(FLAG) $(OBJS) libft/libft.a -o $(NAME)
+	gcc -g $(FLAG) $(OBJS) -o $(NAME)
 
 %.o: %.c
 	@echo "compiling .o"
-	gcc $(FLAG) -c $< -o $@
+	gcc -g $(FLAG) -c $< -o $@
 
 clean:
 	rm -f $(OBJS)
-	make clean -C libft
-
 fclean:
-	rm -f $(NAME) $(LIBRARY)
-	make fclean -C libft
+	rm -f $(NAME)
 	rm -f $(OBJS)
 
 re: fclean all
 
 FORCE:
+
+arg: all
+	@./push_swap $($@) | ./checker_Mac $($@)
+	@./push_swap $($@) | wc -l
+
+##	max=500 ; export arg=`ruby -e "puts (0..$max).to_a.shuffle.join(' ')"` ; ./push_swap $arg | ./checker_Mac $arg ; ./push_swap $arg | wc -l
