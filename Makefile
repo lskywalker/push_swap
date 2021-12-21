@@ -6,13 +6,13 @@
 #    By: lsmit <lsmit@student.codam.nl>               +#+                      #
 #                                                    +#+                       #
 #    Created: 2021/06/30 16:18:16 by lsmit         #+#    #+#                  #
-#    Updated: 2021/10/22 16:46:36 by lsmit         ########   odam.nl          #
+#    Updated: 2021/12/06 14:07:21 by lsmit         ########   odam.nl          #
 #                                                                              #
 # **************************************************************************** #
 
 NAME		= push_swap
 
-SRC_FILES	= main.c instructions.c bigstackutils.c utils.c utils2.c calculate.c small_midsize.c ft_split.c
+SRC_FILES	= main.c instructions.c bigstackutils.c utils.c utils2.c utils3.c calculate.c small_midsize.c ft_split.c
 
 SRC			= $(addprefix src/, $(SRC_FILES))
 

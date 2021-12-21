@@ -6,19 +6,19 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/11 14:52:59 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/10/14 15:35:25 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/12/06 15:59:08 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pushswap.h"
 
-t_stack	*pushback2(t_stack *head, double amount, double i)
+void	pushback2(t_stack **head, double amount, double i)
 {
 	if (i < (amount / 2))
 	{
 		while (i > 0)
 		{
-			rarb(&head, 2);
+			rarb(head, 2);
 			i--;
 		}
 	}
@@ -26,21 +26,20 @@ t_stack	*pushback2(t_stack *head, double amount, double i)
 	{
 		while (i < amount)
 		{
-			rrarrb(&head, 2);
+			rrarrb(head, 2);
 			i++;
 		}
 	}
-	return (head);
 }
 
-void	pushback(t_stack **a, t_stack **b, t_stack **head, double amount)
+void	pushback(t_stack **a, t_stack **b, t_stack *head, double amount)
 {
-	int		i;
+	double	i;
 	int		biggest;
 
 	while (amount > 0)
 	{
-		*b = *head;
+		*b = head;
 		i = 0;
 		biggest = ft_findbiggest(*b);
 		while ((*b)->prev != NULL)
@@ -50,25 +49,8 @@ void	pushback(t_stack **a, t_stack **b, t_stack **head, double amount)
 			*b = (*b)->prev;
 			i++;
 		}
-		if (i < (amount / 2))
-		{
-			while (i > 0)
-			{
-				rarb(head, 2);
-				i--;
-			}
-		}
-		else
-		{
-			while (i < amount)
-			{
-				rrarrb(head, 2);
-				i++;
-			}
-		}
-		dprintf(2, "[%f]\n", amount);
-			// head = pushback2(head, amount, i);
-		push(head, a, 1);
+		pushback2(&head, amount, i);
+		push(&head, a, 1);
 		amount--;
 	}
 }

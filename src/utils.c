@@ -6,7 +6,7 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/11 19:01:12 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/10/14 15:04:53 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/11/23 19:45:42 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -65,7 +65,14 @@ void	ft_add_back(t_stack **head, t_stack *new)
 		ft_add_front(head, new);
 }
 
-void	ft_putstr_fd(char *str, int fd)
+void	ft_bzero(void *s, size_t n)
 {
-	write(fd, str, ft_strlen(str));
+	size_t	i;
+
+	i = 0;
+	while (i < n)
+	{
+		((unsigned char *)s)[i] = 0;
+		i++;
+	}
 }

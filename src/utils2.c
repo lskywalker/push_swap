@@ -6,13 +6,13 @@
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
 /*   Created: 2021/10/11 19:32:12 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/10/14 15:10:39 by lsmit         ########   odam.nl         */
+/*   Updated: 2021/12/06 16:50:49 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pushswap.h"
 
-int		ft_strlen(char *str)
+int	ft_strlen(char const *str)
 {
 	int	i;
 
@@ -22,7 +22,7 @@ int		ft_strlen(char *str)
 	return (i);
 }
 
-int		ft_atoi(char *str)
+int	ft_atoi(char *str)
 {
 	int			i;
 	long long	res;
@@ -31,19 +31,23 @@ int		ft_atoi(char *str)
 	i = 0;
 	n = 1;
 	res = 0;
-	while (str[i] == ' ' || (str[i] >= 9 && str[i] <= 13))
-		i++;
 	if (str[i] == '-')
 		n = -1;
 	if (str[i] == '+' || str[i] == '-')
 		i++;
+	if (!str[i])
+		ft_exit();
 	while (str[i] >= '0' && str[i] <= '9')
 	{
-		if ((res * 10 + (str[i] - '0')) < res)
-			return (((-1 * n) - 1) / 2);
+		if (res > INT_MAX)
+			ft_exit();
+		if (res < INT_MIN)
+			ft_exit();
 		res = res * 10 + str[i] - '0';
 		i++;
 	}
+	if (str[i])
+		ft_exit();
 	return ((int)res * n);
 }
 
@@ -66,17 +70,15 @@ int	precheck(t_stack *a)
 	return (0);
 }
 
-int	ft_listsize(t_stack *lst)
+void	*ft_calloc(size_t count, size_t size)
 {
-	int		i;
+	size_t	len;
+	void	*ptr;
 
-	i = 1;
-	if (lst == NULL)
-		return (0);
-	while (lst->prev != NULL)
-	{
-		lst = lst->prev;
-		i++;
-	}
-	return (i);
+	len = count * size;
+	ptr = malloc(len);
+	if (!ptr)
+		return (NULL);
+	ft_bzero(ptr, len);
+	return (ptr);
 }

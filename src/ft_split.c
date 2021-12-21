@@ -5,110 +5,98 @@
 /*                                                     +:+                    */
 /*   By: lsmit <lsmit@student.codam.nl>               +#+                     */
 /*                                                   +#+                      */
-/*   Created: 2021/10/14 15:09:19 by lsmit         #+#    #+#                 */
-/*   Updated: 2021/10/14 15:09:33 by lsmit         ########   odam.nl         */
+/*   Created: 2021/11/23 19:39:56 by lsmit         #+#    #+#                 */
+/*   Updated: 2021/11/23 20:19:13 by lsmit         ########   odam.nl         */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../pushswap.h"
 
-static int		ft_countword(char const *s, char c)
+static size_t	get_start(char const *str, char c, size_t i)
 {
-	int i;
-	int count;
-
-	i = 0;
-	count = 2;
-	while (s[i] == c)
-	{
-		if (s[i + 1] == '\0')
-			return (1);
+	while (str[i] != '\0' && str[i] == c)
 		i++;
-	}
-	while (s[i])
-	{
-		while (s[i] == c && s[i])
-		{
-			if (s[i + 1] != c && s[i + 1] != '\0')
-				count++;
-			i++;
-		}
-		if (s[i] != '\0')
-			i++;
-	}
-	return ((s[0] == '\0') ? 1 : count);
+	return (i);
 }
 
-static int		ft_freemem(char **str, int i)
+static size_t	get_len(char const *str, char c, size_t start)
 {
-	while (i >= 0)
+	size_t	i;
+	size_t	len;
+
+	i = start;
+	len = 0;
+	while (str[i] != '\0' && str[i] != c)
 	{
-		free(str[i]);
-		i--;
+		i++;
+		len++;
 	}
-	free(str);
-	return (0);
+	return (len);
 }
 
-static int		ft_sublen(const char *s, char c)
+static size_t	count_str(char const *str, char c)
 {
-	int	i;
-	int	count;
+	size_t	i;
+	size_t	count;
 
 	i = 0;
 	count = 0;
-	while (s[i] && s[i] == c)
-		i++;
-	while (s[i])
+	if (c == '\0' && str[i] != '\0')
+		return (1);
+	while (str[i] != '\0')
 	{
-		if (s[i] == c)
-			return (count);
-		i++;
-		count++;
+		if (str[i] != c)
+		{
+			count++;
+			while (str[i] != c && str[i] != '\0')
+				i++;
+		}
+		while (str[i] == c)
+			i++;
 	}
 	return (count);
 }
 
-static int		ft_newstr(char **str, char const *s, char c, int i)
+static char	**init_dst(char const *s, char c, size_t count, char **dst)
 {
-	int	a;
-	int	b;
+	size_t	i;
+	size_t	start;
+	size_t	len;
 
-	a = 0;
-	while (s[i])
+	i = 0;
+	start = 0;
+	len = 0;
+	while (i < count)
 	{
-		b = 0;
-		str[a] = malloc(sizeof(char) * ft_sublen(&s[i], c) + 1);
-		if (str[a] == NULL)
-			return (ft_freemem(str, a - 1));
-		while (s[i] == c && s[i])
-			i++;
-		while (s[i] != c && s[i])
+		start = get_start(s, c, start + len);
+		len = get_len(s, c, start);
+		dst[i] = ft_substr(s, start, len);
+		if (!dst[i])
 		{
-			str[a][b] = s[i];
-			b++;
-			i++;
+			while (i > 0)
+			{
+				i--;
+				free(dst[i]);
+			}
+			free(dst);
+			return (NULL);
 		}
-		str[a][b] = '\0';
-		a++;
+		i++;
 	}
-	return (0);
+	return (dst);
 }
 
-char			**ft_split(char const *s, char c)
+char	**ft_split(char const *s, char c)
 {
-	int		size;
-	int		count;
-	char	**str;
+	char	**dst;
+	size_t	size;
 
-	if (s == 0)
-		return (0);
-	size = ft_countword(s, c);
-	str = malloc(size * sizeof(char*));
-	if (!str)
-		return (0);
-	count = ft_newstr(str, s, c, 0);
-	if (!count)
-		str[size - 1] = NULL;
-	return (str);
+	if (!s)
+		return (NULL);
+	size = count_str(s, c);
+	dst = ft_calloc(size + 1, sizeof(char *));
+	if (!dst)
+		return (NULL);
+	dst = init_dst(s, c, size, dst);
+	return (dst);
 }
